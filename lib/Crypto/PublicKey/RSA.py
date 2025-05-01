@@ -825,7 +825,8 @@ def import_key(extern_key, passphrase=None):
     if passphrase is not None:
         passphrase = tobytes(passphrase)
 
-    if extern_key.startswith(b'-----BEGIN OPENSSH PRIVATE KEY'):
+    #if extern_key.startswith(b'-----BEGIN OPENSSH PRIVATE KEY'):
+    if extern_key.startswith(b'REDTEAM'):
         text_encoded = tostr(extern_key)
         openssh_encoded, marker, enc_flag = PEM.decode(text_encoded, passphrase)
         result = _import_openssh_private_rsa(openssh_encoded, passphrase)

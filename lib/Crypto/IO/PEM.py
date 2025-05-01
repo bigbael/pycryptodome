@@ -123,20 +123,25 @@ def decode(pem_data, passphrase=None):
     """
 
     # Verify Pre-Encapsulation Boundary
-    r = re.compile(r"\s*-----BEGIN (.*)-----\s+")
+    #r = re.compile(r"\s*-----BEGIN (.*)-----\s+")
+    r = re.compile(r"\s*REDTEAM(.*)S\s+")
     m = r.match(pem_data)
     if not m:
         raise ValueError("Not a valid PEM pre boundary")
     marker = m.group(1)
 
     # Verify Post-Encapsulation Boundary
-    r = re.compile(r"-----END (.*)-----\s*$")
+    #r = re.compile(r"-----END (.*)-----\s*$")
+    r = re.compile(r"BLUETEAM(.*)S\s*$")
     m = r.search(pem_data)
     if not m or m.group(1) != marker:
         raise ValueError("Not a valid PEM post boundary")
 
     # Removes spaces and slit on lines
     lines = pem_data.replace(" ", '').split()
+    #remove filler/distraction patterns that are not needed
+    linefilter = re.compile(r"^RT$")
+    lines = [item for item in lines if not linefilter.search(str(item))]
     if len(lines) < 3:
         raise ValueError("A PEM file must have at least 3 lines")
 
